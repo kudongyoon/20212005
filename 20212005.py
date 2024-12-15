@@ -6,7 +6,7 @@ def play():
     user = input("당신의 선택은 무엇인가요? 'r'은 바위, 'p'는 보, 's'는 가위, 'q'는 게임 종료\n")
     user = user.lower()
 
-    # 사용자가 'q'를 입력하면 게임 종료
+    # 사용자가 'q'를 입력하면 게임 종료입니다.
     if user == 'q':
         return ('q', user, None)
 
@@ -42,7 +42,7 @@ def play_best_of(n):
     while player_wins < wins_necessary and computer_wins < wins_necessary:
         result, user, computer = play()
         
-        # 게임 종료 시
+        # 게임 종료 시 입니다.
         if result == 'q':
             print("게임이 종료되었습니다. 수고하셨습니다!")
             break
@@ -59,7 +59,7 @@ def play_best_of(n):
             print('당신은 {}를 선택했고, 컴퓨터는 {}를 선택했습니다. 당신은 졌습니다 :(\n'.format(user, computer))
 
     # 최종 승패 출력값입니다.
-    if result != 'q':  # 게임이 종료되지 않았다면
+    if result != 'q':  # 게임이 종료되지 않았을 경우 입니다.
         if player_wins > computer_wins:
             print('당신이 {}판 중 {}판을 이겼습니다! 멋진 승리입니다 :D'.format(n, player_wins))
         else:
