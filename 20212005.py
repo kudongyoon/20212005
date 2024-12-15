@@ -2,9 +2,13 @@ import random
 import math
 
 def play():
-    # 사용자로부터 선택을 입력받습니다. ('r'은 바위, 'p'는 보, 's'는 가위)
-    user = input("당신의 선택은 무엇인가요? 'r'은 바위, 'p'는 보, 's'는 가위\n")
+    # 사용자로부터 선택을 입력받습니다. ('r'은 바위, 'p'는 보, 's'는 가위, 'q'는 게임 종료)
+    user = input("당신의 선택은 무엇인가요? 'r'은 바위, 'p'는 보, 's'는 가위, 'q'는 게임 종료\n")
     user = user.lower()
+
+    # 사용자가 'q'를 입력하면 게임 종료
+    if user == 'q':
+        return ('q', user, None)
 
     # 컴퓨터의 선택을 무작위로 결정합니다.
     computer = random.choice(['r', 'p', 's'])
@@ -38,6 +42,11 @@ def play_best_of(n):
     while player_wins < wins_necessary and computer_wins < wins_necessary:
         result, user, computer = play()
         
+        # 게임 종료 시
+        if result == 'q':
+            print("게임이 종료되었습니다. 수고하셨습니다!")
+            break
+        
         # 비겼을 경우입니다.
         if result == 0:
             print('비겼습니다. 당신과 컴퓨터가 모두 {}를 선택했습니다. \n'.format(user))
@@ -50,13 +59,13 @@ def play_best_of(n):
             print('당신은 {}를 선택했고, 컴퓨터는 {}를 선택했습니다. 당신은 졌습니다 :(\n'.format(user, computer))
 
     # 최종 승패 출력값입니다.
-    if player_wins > computer_wins:
-        print('당신이 {}판 중 {}판을 이겼습니다! 멋진 승리입니다 :D'.format(n, player_wins))
-    else:
-        print('안타깝게도 컴퓨터가 {}판 중 {}판을 이겼습니다. 다음에는 더 잘할 수 있을 거예요!'.format(n, computer_wins))
+    if result != 'q':  # 게임이 종료되지 않았다면
+        if player_wins > computer_wins:
+            print('당신이 {}판 중 {}판을 이겼습니다! 멋진 승리입니다 :D'.format(n, player_wins))
+        else:
+            print('안타깝게도 컴퓨터가 {}판 중 {}판을 이겼습니다. 다음에는 더 잘할 수 있을 거예요!'.format(n, computer_wins))
 
 
 # 3판 2선승제입니다.
 if __name__ == '__main__':
-    play_best_of(3) 
-
+    play_best_of(3)
