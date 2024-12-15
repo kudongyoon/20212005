@@ -1,12 +1,43 @@
 import random
 import math
+import time
+import threading
+
+# 시간 제한을 위한 함수입니다.
+def timeout_input(prompt, timeout=10):
+    print(prompt, end=" ", flush=True)
+    
+    # 입력을 받기 위한 이벤트 객체입니다.
+    user_input = []
+    
+    # 입력을 받는 함수입니다.
+    def get_input():
+        user_input.append(input())
+    
+    # 입력을 받는 스레드 시작입니다.
+    input_thread = threading.Thread(target=get_input)
+    input_thread.start()
+
+    # 시간 제한 동안 기다립니다.
+    input_thread.join(timeout)
+
+    # 시간 내에 입력이 있으면 그 값을 반환, 없으면 '시간 초과' 처리합니다.
+    if user_input:
+        return user_input[0]
+    else:
+        print("\n시간 초과! 자동 선택됩니다.")
+        return None
 
 def play():
     # 사용자로부터 선택을 입력받습니다. ('r'은 바위, 'p'는 보, 's'는 가위, 'q'는 게임 종료)
-    user = input("당신의 선택은 무엇인가요? 'r'은 바위, 'p'는 보, 's'는 가위, 'q'는 게임 종료\n")
-    user = user.lower()
+    user = timeout_input("당신의 선택은 무엇인가요? 'r'은 바위, 'p'는 보, 's'는 가위, 'q'는 게임 종료", timeout=10)
 
-    # 사용자가 'q'를 입력하면 게임 종료입니다.
+    # 사용자가 입력하지 않으면 None 반환합니다.
+    if user is None:
+        # 자동으로 선택을 하도록 설정합니다.
+        user = random.choice(['r', 'p', 's'])
+    
+    # 사용자가 'q'를 입력하면 게임 종료합니다.
     if user == 'q':
         return ('q', user, None)
 
@@ -32,21 +63,19 @@ def is_win(player, opponent):
     return False
 
 def play_best_of(n):
-    # 컴퓨터와 최종적으로 n판 중 다수결로 승패를 결정하는 게임입니다.
-    # 이기려면 ceil(n/2)번을 이겨야 합니다. (예: 2/3, 3/5, 4/7)
     player_wins = 0
     computer_wins = 0
     wins_necessary = math.ceil(n/2)
-    
+
     # 플레이어와 컴퓨터가 각각 wins_necessary번 이상 이길 때까지 게임을 반복합니다.
     while player_wins < wins_necessary and computer_wins < wins_necessary:
         result, user, computer = play()
-        
+
         # 게임 종료 시 입니다.
         if result == 'q':
             print("게임이 종료되었습니다. 수고하셨습니다!")
             break
-        
+
         # 비겼을 경우입니다.
         if result == 0:
             print('비겼습니다. 당신과 컴퓨터가 모두 {}를 선택했습니다. \n'.format(user))
@@ -65,7 +94,7 @@ def play_best_of(n):
         else:
             print('안타깝게도 컴퓨터가 {}판 중 {}판을 이겼습니다. 다음에는 더 잘할 수 있을 거예요!'.format(n, computer_wins))
 
-
 # 3판 2선승제입니다.
 if __name__ == '__main__':
     play_best_of(3)
+
